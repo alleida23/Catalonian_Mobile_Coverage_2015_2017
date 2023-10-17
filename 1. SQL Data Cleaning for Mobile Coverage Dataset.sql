@@ -2,6 +2,10 @@
 ## SQL Data Cleaning for Mobile Coverage Dataset ##
 ###################################################
 
+#BigQuery query link
+
+""" https://console.cloud.google.com/bigquery?sq=779325856445:d06791038e6a4ede9f023e4d58653c38 """
+
 # Purpose:
 
 "This SQL code is designed to clean and prepare a public dataset of mobile coverage data in Google BigQuery. The primary goal is data cleaning, which includes creating a new table,
@@ -101,9 +105,10 @@ WHERE hour_24h IS NULL;
 
 """This code removes the 'date' and 'hour' columns from the 'table.' It effectively drops these columns, eliminating them from the table's schema and data."""
 
-ALTER TABLE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
-DROP COLUMN date,
-DROP COLUMN hour;
+-- change: not deleted
+#ALTER TABLE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
+#DROP COLUMN date, 
+#DROP COLUMN hour;
 
 
 
