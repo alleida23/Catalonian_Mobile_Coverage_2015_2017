@@ -4,13 +4,19 @@
 
 # Purpose:
 
-"This SQL code is designed to clean and prepare a public dataset of mobile coverage data in Google BigQuery. The primary goal is data cleaning, which includes creating a new table, normalizing categorical features, handling missing data, and removing outliers from numerical features. This process is essential for ensuring data quality and reliability for subsequent analysis."
+"This SQL code is designed to clean and prepare a public dataset of mobile coverage data in Google BigQuery. The primary goal is data cleaning, which includes creating a new table,
+normalizing categorical features, handling missing data, and removing outliers from numerical features.
+This process is essential for ensuring data quality and reliability for subsequent analysis."
+
+
 
 ###################################################
 ## Creating Table and Columns ##
 ###################################################
 
+
 # Create Table:
+
 "This code creates a copy of the 'mobile_data_2015_2017' table by selecting specific columns and saves it as 'mobile_data_2015_2017_cleaned'"
 
 CREATE TABLE IF NOT EXISTS `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned` AS
@@ -39,13 +45,16 @@ FROM
   `bigquery-public-data.catalonian_mobile_coverage_eu.mobile_data_2015_2017`
 ;
 
+
 # Add 'province' column:
 ALTER TABLE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
 ADD COLUMN province STRING;
 
 # Add 'province' values:
 
-"""This code assigns province values based on the first two digits of the 'postal_code' column.  If the first two digits match predefined values (08, 25, 17, or 43), it assigns the corresponding province name (Barcelona, Lleida, Girona, or Tarragona). If the 'postal_code' doesn't match any of these values, it assigns 'Not defined.' This update is only performed for rows where the 'province' column is currently NULL."""
+"""This code assigns province values based on the first two digits of the 'postal_code' column. If the first two digits match predefined values (08, 25, 17, or 43),
+it assigns the corresponding province name (Barcelona, Lleida, Girona, or Tarragona). If the 'postal_code' doesn't match any of these values,
+it assigns 'Not defined'. This update is only performed for rows where the 'province' column is currently NULL."""
 
 UPDATE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
 SET province = CASE
@@ -57,7 +66,9 @@ SET province = CASE
 END
 WHERE province IS NULL;
 
-# Add 'year', 'month', and 'hour_24h' columns and values:
+
+
+# Add 'year', 'month', and 'hour_24h' columns:
 ALTER TABLE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
 ADD COLUMN year INT64;
 
@@ -67,27 +78,11 @@ ADD COLUMN month INT64;
 ALTER TABLE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
 ADD COLUMN hour_24h INT64;
 
-UPDATE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
-SET province = CASE
-  WHEN LEFT(CAST(postal_code AS STRING), 2) = '08' THEN 'Barcelona'
-  WHEN LEFT(CAST(postal_code AS STRING), 2) = '25' THEN 'Lleida'
-  WHEN LEFT(CAST(postal_code AS STRING), 2) = '17' THEN 'Girona'
-  WHEN LEFT(CAST(postal_code AS STRING), 2) = '43' THEN 'Tarragona'
-  ELSE 'Not defined'
-END
-WHERE province IS NULL;
+# Add 'year', 'month', and 'hour_24h' values:
 
-# Add 'year' , month, and 'hour' columns and values
-ALTER TABLE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
-ADD COLUMN year INT64;
-
-ALTER TABLE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
-ADD COLUMN month INT64;
-
-ALTER TABLE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
-ADD COLUMN hour_24h INT64;
-
-"""This code updates the 'year' column in the 'table.' It calculates the year value by extracting the year from the 'date' column and assigns it to the 'year' column. This update is only performed for rows where the 'year' column is currently NULL."""
+"""This code updates the 'year' column in the 'table.' It calculates the year value by extracting
+the year from the 'date' column and assigns it to the 'year' column.
+This update is only performed for rows where the 'year' column is currently NULL."""
 
 UPDATE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
 SET year = EXTRACT(YEAR FROM date)
@@ -101,12 +96,16 @@ UPDATE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015
 SET hour_24h = EXTRACT(HOUR FROM hour)
 WHERE hour_24h IS NULL;
 
-"""This code removes the 'date' and 'hour' columns from the 'table.' It effectively drops these columns, eliminating them from the table's schema and data."""
 
 # Drop date and hour columns:
+
+"""This code removes the 'date' and 'hour' columns from the 'table.' It effectively drops these columns, eliminating them from the table's schema and data."""
+
 ALTER TABLE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
 DROP COLUMN date,
 DROP COLUMN hour;
+
+
 
 ###################################################
 ## Categorical Features ##
@@ -120,7 +119,10 @@ FROM `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2
 
 -- Modify 'operator' names:
 
-"""This code standardizes the 'operator' names in the 'table.' It employs various functions like UPPER (to convert to uppercase), TRIM (to remove leading/trailing spaces), and LIKE (with % wildcard for pattern matching) to recognize and group similar operator names under a common name. For example, 'VODAFONE' and 'VF ES' are both categorized as 'Vodafone.' It ensures uniformity in the 'operator' column, making the data more consistent and easier to work with."""
+"""This code standardizes the 'operator' names in the 'table.' It employs various functions like
+UPPER (to convert to uppercase), TRIM (to remove leading/trailing spaces),
+and LIKE (with % wildcard for pattern matching) to recognize and group similar operator names under a common name.
+For example, 'VODAFONE' and 'VF ES' are both categorized as 'Vodafone.' It ensures uniformity in the 'operator' column, making the data more consistent and easier to work with."""
 
 UPDATE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
 SET operator = CASE
@@ -225,6 +227,7 @@ SET network = CASE
 END
 WHERE network IS NOT NULL; -- Final 'network' count: 136
 
+
 # Normalize Postal Code and Town Names:
 -- This part ensures that there are no discrepancies between postal codes and town names, and removes rows with missing values in both columns.
 
@@ -249,6 +252,7 @@ WHERE postal_code IS NULL AND town_name IS NULL;
 DELETE FROM `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
 WHERE postal_code IS NULL AND town_name IS NULL;
 
+
 # Normalize 'net' Column:
 
 SELECT DISTINCT(net)
@@ -259,6 +263,7 @@ SELECT COUNT(*)
 FROM `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
 WHERE net IS NULL;
 
+-- Update null values to 'Undefined net'
 UPDATE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
 SET net = CASE
   WHEN net IS NULL THEN 'Undefined net'
@@ -266,16 +271,18 @@ SET net = CASE
 END
 WHERE net IS NULL;
 
+
 # Download and Upload Speed Columns:
 
 SELECT downloadSpeed FROM `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned` WHERE downloadSpeed IS NOT NULL limit 100; -- record count: 0
 
 SELECT uploadSpeed FROM `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned` WHERE uploadSpeed IS NOT NULL limit 100;     -- record count: 0
 
--- Drop both columns
+-- Drop both columns (both empty)
 ALTER TABLE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
 DROP COLUMN downloadSpeed,
 DROP COLUMN uploadSpeed;
+
 
 # Normalize Provider Names:
 
@@ -302,6 +309,7 @@ WHERE provider IN (
   '4','22','19','2017-081503867352116,', 'local_database', 'disabled'
 ) OR provider IS NULL; -- Final 'provider' count: 3
 
+
 # Normalize 'description' and 'activity':
 
 -- Description
@@ -312,13 +320,14 @@ FROM `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2
 SELECT DISTINCT(activity)
 FROM `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`;
 
-"""Assign 'UNKNOWN' to rows with NULL activity values in the table."""
-
+-- Update null values to 'UNKNOWN'
 UPDATE `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
 SET activity = CASE 
   WHEN activity IS NULL THEN 'UNKNOWN' 
 END
 WHERE activity IS NULL;
+
+
 
 ###################################################
 ## Numerical Features ##
@@ -330,10 +339,10 @@ WHERE activity IS NULL;
 
 SELECT
   'status' AS metric,
-  MIN(status) AS min_value,
-  MAX(status) AS max_value,
-  ROUND(AVG(status), 2) AS avg_value,
-  ROUND(STDDEV_POP(status), 2) AS std_value
+  MIN(status) AS min_value, -- minimum
+  MAX(status) AS max_value, -- maximum
+  ROUND(AVG(status), 2) AS avg_value, -- average
+  ROUND(STDDEV_POP(status), 2) AS std_value -- standard deviation
 FROM `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
 UNION ALL
 SELECT
@@ -369,7 +378,7 @@ SELECT
 FROM `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`;
 
 # Handling 'precission' Possible Outliers:
-
+-- Check higher precision values
 SELECT precission
 FROM `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned`
 ORDER BY 1 DESC;
@@ -391,7 +400,8 @@ FROM Percentiles; -- Percentile 99: top 1% of values (around 100k rows) are grea
 
 -- How would the removal of outliers affect the data distribution, and would this impact be consistent across different provinces?
 
-"""This query calculates and compares outlier percentages in different provinces based on the 'precission' column, where values above 120 are considered outliers. It provides insights into how outliers are distributed among provinces."""
+"""This query calculates and compares outlier percentages in different provinces based on the 'precission' column, where values above 120 are considered outliers.
+It provides insights into how outliers are distributed among provinces."""
 
 SELECT
   province,
@@ -407,6 +417,8 @@ DELETE FROM `bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data
 WHERE precission > 120;
 
 -- New 'precission' summary statistics: max 120, avg 21.93, std 17.76
+
+
 
 ###################################################
 ## Save Cleaned Table ##
