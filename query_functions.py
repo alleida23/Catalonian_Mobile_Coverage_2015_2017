@@ -72,3 +72,51 @@ def query_df(query, df_name):
     
     # Return the DataFrame with the new assigned name
     return df
+
+
+
+# Same but without printing nor storing the result in a dataset. Useful for queries like UPDATE or DELETE
+
+def run_query(query):
+    """
+    This function allows the user to execute SQL queries using a pre-configured BigQuery client
+    object and directly update the table.
+
+    Args:
+    - query (str): The SQL query to execute.
+
+    Example Usage:
+    1. Call the function with the query as an argument.
+
+    Example:
+    1. run_query_and_update(query) to execute SQL queries and update the table.
+    """
+    
+    # Import required libraries
+    from google.cloud import bigquery
+    
+    """ Create a BigQuery client """
+    
+    # Read the path to your BigQuery key file
+    with open("bq_key_path.txt", "r") as f:
+        credentials_path = f.read()
+
+    # Remove any newline characters from the path
+    credentials_path = credentials_path.strip()
+
+    # Create a BigQuery client using the credentials
+    client = bigquery.Client.from_service_account_json(credentials_path)
+    
+    """ Execute the query and update the table """
+    
+    # Execute the query using the pre-configured client object
+    try:
+        query_job = client.query(query)
+        # Wait for the query to finish (update to complete)
+        query_job.result()
+        print("Query successfully executed, and the table has been updated.")
+    except Exception as e:
+        # Query execution encountered an error
+        print(f"Error executing query: {str(e)}")
+
+
