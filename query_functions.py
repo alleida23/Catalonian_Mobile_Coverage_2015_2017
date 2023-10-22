@@ -57,7 +57,7 @@ def query_df(query):
     df = pd.DataFrame(rows, columns=column_names)
     
     # Print the DataFrame
-    display(df)
+    #display(df)
     
     # Return the DataFrame
     return df
