@@ -1,7 +1,9 @@
 """
 query_functions.py
 
-This Python module provides two main functions for executing SQL queries with a pre-configured Google BigQuery client object. These functions are useful for working with Google BigQuery, storing query results in a Pandas DataFrame, or directly updating tables. To use these functions, follow the import instructions below and examples of their usage.
+This Python module provides two main functions for executing SQL queries with a pre-configured Google BigQuery client object. 
+These functions are useful for working with Google BigQuery, storing query results in a Pandas DataFrame,
+or directly updating tables. To use these functions, follow the import instructions below and examples of their usage.
 
 Functions:
 1. query_df(query)
@@ -31,13 +33,15 @@ To use these functions, follow these steps:
     # from query_functions import query_df
     # from query_functions import run_query
 
-2. Make sure to configure your BigQuery client by providing the path to your BigQuery key file. This path should be stored in a file named "bq_key_path.txt."
+2. Make sure to configure your BigQuery client by providing the path to your BigQuery key file.
+This path should be stored in a file named "bq_key_path.txt."
 
 3. Call the imported functions with your SQL queries to interact with your BigQuery datasets and tables.
 
 Remember to adjust the "bq_key_path.txt" file with the appropriate path to your BigQuery key file.
 
-This module simplifies your interaction with Google BigQuery, making it easier to work with SQL queries and data in a BigQuery environment.
+This module simplifies your interaction with Google BigQuery, making it easier to work with SQL queries 
+and data in a BigQuery environment.
 
 
 Functions:
