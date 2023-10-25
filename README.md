@@ -26,9 +26,13 @@ Please note that this project is an ongoing endeavor, with continuous developmen
 
 **Links to Created Datasets:**
 
-- **Main Dataset:** [bq-analyst-230590.project_cat_mobile_coverage_2015_2017.mobile_data_2015_2017_cleaned](link)
-- **Additional Table 1:** [bq-analyst-230590.project_cat_mobile_coverage_2015_2017.cat_pop_by_province_2015_2017](link)
-- **Additional Table 2:** [bq-analyst-230590.project_cat_mobile_coverage_2015_2017.cat_percapita_income_by_province_2015_2017](link)
+- **Main Dataset:** [Mobile Data Coverage 2015-2017](link)
+- **Additional Table 1:** [Catalan Population by Province 2015-2017](link)
+- **Additional Table 2:** [Catalan Per Capita Income by Province 2015-2017](link)
+
+---
+
+In this format, you can replace "link" with the actual links to your datasets for a user-friendly experience.
 
 ---
 
