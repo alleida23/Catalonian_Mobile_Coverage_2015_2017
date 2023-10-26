@@ -32,10 +32,6 @@ Please note that this project is an ongoing endeavor, with continuous developmen
 
 ---
 
-In this format, you can replace "link" with the actual links to your datasets for a user-friendly experience.
-
----
-
 **Project Files and Structure:** 
 
 - [Jupyter Notebook File:](link) A detailed Jupyter notebook provides insights into the data cleaning and transformation process. SQL queries are executed, and data visualization is employed to provide clarity in the project's development.
